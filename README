@@ -1,0 +1,70 @@
+Bucur Ionut-Cristian,323CA
+
+
+Patternuri folosite
+
+	-Visitor Pattern -folosit in printarea ast-ului +interpretarea ast-ului
+
+Workflow
+
+	In clasa CommandLineInterface(CLI) instantiem un obiect de tip AST(Abstract
+Syntax Tree) ce va fi dat ca parametru unui obiect de tipul CommandHandler
+ce se ocupa cu construirea arborelui prin metoda parseCommands.Aceasta metoda
+verifica tipul comenzii curente si in functie de rezultat si argumentul acesteia
+daca exista adauga un nou nod de tipul corespunzator(ce contine sau nu copii 
+corespunzatori) in ast ca subnod al nodului curent
+De citirea din fisier se ocupa un obiect de tipul InputHandler ce furnieaza
+liniile din acesta lui CommandHandler
+De scrierea in fisier se ocupa un obiect de tipul OutputHandler ce scrie in
+fisierul cu extensia conrespunzatoare linia dorita
+
+	#Printarea ast-ului
+
+		In continuare,avand arborele construit,instantiem un obiect de tipul 
+PrintVisitor ce se ocupa cu printarea ast-ului in fisierul corespunzator.
+
+@Mecanismul din spatele acestuia este urmatorul:un visitor de tipul TreeVisitor
+trece prin nodurile ast-ului si trasnmite requestul de accept al PrintVisitor pe 
+nodul curent.In urma acestuia,in functie de tipul de nod,sunt "printate" datele
+corespunzatoare acestuia.
+
+	#Interpretarea ast-ului
+
+		Pentru interpreatarea ast-ului folosim un visitor de tipul InterpretVisitor
+ce implementeaza interpretarea efectiva a comenzilor si scrie rezultatul intr-un
+fisier corespunzator.
+
+@Mecanismul din spatele acestuia este urmatorul:InterpretVisitor are "in spate"
+un arraylist ce contine variabilele curente(declarate) ce este folosit pentru
+a salva rezultatele operatiilor si pentru a le afisa si o variabila,currentVariable
+pe care se efectueaza operatii precum assign si tempResult pe care se bazeaza 
+majoritatea operatiilor.In functie de tipul de nod se efectueazaoperatia 
+corespunzatoare pentru tipul de nod.
+
+De exemplu: SumNode -are 2 argumente
+					-trimite cate un request de accept pentru fiecare
+					-rezultatul fiecarui request este salvat de fiecare data in
+					tempResult
+					-salveaza rezultatul requesturilor
+					-efectueaza operatia 
+					-salveaza rezultatul in tempResult
+			
+			AssignmentNode -salveaza rezultatul in variabila curenta 
+
+			ConstantNode,VariableNode -salveaza valoarea curenta in tempResult
+			
+			ConditionNode - salveaza rezultatul conditiei(0/1) in tempResult
+
+			IfNode -verifica daca conditia este valida
+				   -sare in functie de acesta la nodul de Else(daca exista) sau
+executa instructiunile din IfBodyNode
+
+			While - ruleaza cat timp conditia este valida
+				   -executa instructiunile din WhileBodyNode
+
+	
+		
+	
+		
+		
+
